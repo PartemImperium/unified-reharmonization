@@ -90,196 +90,222 @@ enum ButtonType : unsigned short {
     KeypadE = 0x28,
 };
 
+struct KeyPressFrame {
+    private:
+        unsigned char* RawFrame;
+        int RawSize;
 
-void outputFrame(unsigned char* _frame, int _size) {
-    std::cout << std::hex;
-    std::cout << "Full Frame => ";
-    for (int i = 0; i < _size; i++) {
-        std::cout << (unsigned short) _frame[i] << "/";
-    }
-    std::cout << std::endl;
-    std::cout << std::dec;
-}
-
-void outputKey(unsigned char* _frame, int _size) {
-    ButtonType key = (ButtonType) ((unsigned short) (_frame[HARMONY_KEY_POSITION] << 8) + _frame[HARMONY_KEY_POSITION + 1]);
-
-    switch (key) {
-        case Off:
-            std::cout << "Key => Off Button";
-            break;
-
-        case ActivityMusic:
-            std::cout << "Key => Activity Music";
-            break;
-        case ActivityScreen:
-            std::cout << "Key => Activity Screen";
-            break;
-        case ActivityMovie:
-            std::cout << "Key => Activity Movie";
-            break;
-
-        case SmartPlus:
-            std::cout << "Key => Smart Plus";
-            break;
-        case SmartMinus:
-            std::cout << "Key => Smart Minus";
-            break;
-        case SmartLightTop:
-            std::cout << "Key => Light Top";
-            break;
-        case SmartLightBottom:
-            std::cout << "Key => Light Bottom";
-            break;
-        case SmartOutletTop:
-            std::cout << "Key => Outlet Top";
-            break;
-        case SmartOutletBottom:
-            std::cout << "Key => Outlet Bottom";
-            break;
-
-        case Blue:
-            std::cout << "Key => Blue";
-            break;
-        case Yellow:
-            std::cout << "Key => Yellow";
-            break;
-        case Green:
-            std::cout << "Key => Green";
-            break;
-        case Red:
-            std::cout << "Key => Red";
-            break;
-
-        case Dvr:
-            std::cout << "Key => DVR";
-            break;
-        case Guide:
-            std::cout << "Key => Guide";
-            break;
-        case Info:
-            std::cout << "Key => Info";
-            break;
-
-        case Exit:
-            std::cout << "Key => Exit";
-            break;
-        case Menu:
-            std::cout << "Key => Menu";
-            break;
-
-        case VolumeUp:
-            std::cout << "Key => Volume Up";
-            break;
-        case VolumeDown:
-            std::cout << "Key => Volume Down";
-            break;
-
-        case DPadLeft:
-            std::cout << "Key => D-Pad Left";
-            break;
-        case DPadRight:
-            std::cout << "Key => D-Pad Right";
-            break;
-        case DPadUp:
-            std::cout << "Key => D-Pad Up";
-            break;
-        case DPadDown:
-            std::cout << "Key => D-Pad Down";
-            break;
-
-        case DPadOk:
-            std::cout << "Key => D-Pad OK";
-            break;
-
-        case ChannelUp:
-            std::cout << "Key => Channel Up";
-            break;
-        case ChannelDown:
-            std::cout << "Key => Channel Down";
-            break;
-
-        case Mute:
-            std::cout << "Key => Mute";
-            break;
-        case BackArrow:
-            std::cout << "Key => Back Arrow";
-            break;
-
-        case FastForward:
-            std::cout << "Key => Fast Forward";
-            break;
-        case FastBackward:
-            std::cout << "Key => Fast Backward";
-            break;
-
-        case Play:
-            std::cout << "Key => Play";
-            break;
-        case Pause:
-            std::cout << "Key => Pause";
-            break;
-
-        case Record:
-            std::cout << "Key => Record";
-            break;
-        case Stop:
-            std::cout << "Key => Stop";
-            break;
-
-        case Keypad1:
-            std::cout << "Key => 1";
-            break;
-        case Keypad2:
-            std::cout << "Key => 2";
-            break;
-        case Keypad3:
-            std::cout << "Key => 3";
-            break;
-        case Keypad4:
-            std::cout << "Key => 4";
-            break;
-        case Keypad5:
-            std::cout << "Key => 5";
-            break;
-        case Keypad6:
-            std::cout << "Key => 6";
-            break;
-        case Keypad7:
-            std::cout << "Key => 7";
-            break;
-        case Keypad8:
-            std::cout << "Key => 8";
-            break;
-        case Keypad9:
-            std::cout << "Key => 9";
-            break;
-        case Keypad0:
-            std::cout << "Key => 0";
-            break;
-
-        case KeypadDash:
-            std::cout << "Key => Keypad .-";
-            break;
-        case KeypadE:
-            std::cout << "Key => Keypad E";
-            break;
-
-        default:
-            std::cout << std::hex;
-            std::cout << "KEY => " << key << std::endl;
-            std::cout << std::dec;
-            break;
+        void parseKey() {
+            Key = (ButtonType) ((unsigned short) (RawFrame[HARMONY_KEY_POSITION] << 8) + RawFrame[HARMONY_KEY_POSITION + 1]);
         }
-        
-        std::cout << std::endl;
-}
 
-void outputDeviceSlot(unsigned char* _frame, int _size) {
-    unsigned short deviceSlot = (unsigned short) _frame[HARMONY_DEVICE_SLOT_POSITION];
+        void parseDeviceSlot() {
+            DeviceSlot = (unsigned short) RawFrame[HARMONY_DEVICE_SLOT_POSITION];
+        }
 
-    std::cout << "Device ID => " << deviceSlot << std::endl;
-}
+    public:
+        ButtonType Key;
+        unsigned short DeviceSlot;
+
+        KeyPressFrame(unsigned char* _frame, int _size) {
+            RawFrame = _frame;
+            RawSize = _size;
+
+            parseKey();
+            parseDeviceSlot();
+        }
+
+        void outputDeviceSlot() {
+            std::cout << "Device ID => " << DeviceSlot << std::endl;
+        }
+
+        void outputRawFrame() {
+            std::cout << "Length:" << RawSize << std::endl;
+            
+            std::cout << std::hex;
+            std::cout << "Full Frame => ";
+
+            for (int i = 0; i < RawSize; i++) {
+                std::cout << (unsigned short) RawFrame[i] << "/";
+            }
+
+            std::cout << std::endl;
+            std::cout << std::dec;
+        }
+
+        void outputKey() {
+            switch (Key) {
+                case Off:
+                    std::cout << "Key => Off Button";
+                    break;
+            
+                case ActivityMusic:
+                    std::cout << "Key => Activity Music";
+                    break;
+                case ActivityScreen:
+                    std::cout << "Key => Activity Screen";
+                    break;
+                case ActivityMovie:
+                    std::cout << "Key => Activity Movie";
+                    break;
+            
+                case SmartPlus:
+                    std::cout << "Key => Smart Plus";
+                    break;
+                case SmartMinus:
+                    std::cout << "Key => Smart Minus";
+                    break;
+                case SmartLightTop:
+                    std::cout << "Key => Light Top";
+                    break;
+                case SmartLightBottom:
+                    std::cout << "Key => Light Bottom";
+                    break;
+                case SmartOutletTop:
+                    std::cout << "Key => Outlet Top";
+                    break;
+                case SmartOutletBottom:
+                    std::cout << "Key => Outlet Bottom";
+                    break;
+            
+                case Blue:
+                    std::cout << "Key => Blue";
+                    break;
+                case Yellow:
+                    std::cout << "Key => Yellow";
+                    break;
+                case Green:
+                    std::cout << "Key => Green";
+                    break;
+                case Red:
+                    std::cout << "Key => Red";
+                    break;
+            
+                case Dvr:
+                    std::cout << "Key => DVR";
+                    break;
+                case Guide:
+                    std::cout << "Key => Guide";
+                    break;
+                case Info:
+                    std::cout << "Key => Info";
+                    break;
+            
+                case Exit:
+                    std::cout << "Key => Exit";
+                    break;
+                case Menu:
+                    std::cout << "Key => Menu";
+                    break;
+            
+                case VolumeUp:
+                    std::cout << "Key => Volume Up";
+                    break;
+                case VolumeDown:
+                    std::cout << "Key => Volume Down";
+                    break;
+            
+                case DPadLeft:
+                    std::cout << "Key => D-Pad Left";
+                    break;
+                case DPadRight:
+                    std::cout << "Key => D-Pad Right";
+                    break;
+                case DPadUp:
+                    std::cout << "Key => D-Pad Up";
+                    break;
+                case DPadDown:
+                    std::cout << "Key => D-Pad Down";
+                    break;
+            
+                case DPadOk:
+                    std::cout << "Key => D-Pad OK";
+                    break;
+            
+                case ChannelUp:
+                    std::cout << "Key => Channel Up";
+                    break;
+                case ChannelDown:
+                    std::cout << "Key => Channel Down";
+                    break;
+            
+                case Mute:
+                    std::cout << "Key => Mute";
+                    break;
+                case BackArrow:
+                    std::cout << "Key => Back Arrow";
+                    break;
+            
+                case FastForward:
+                    std::cout << "Key => Fast Forward";
+                    break;
+                case FastBackward:
+                    std::cout << "Key => Fast Backward";
+                    break;
+            
+                case Play:
+                    std::cout << "Key => Play";
+                    break;
+                case Pause:
+                    std::cout << "Key => Pause";
+                    break;
+            
+                case Record:
+                    std::cout << "Key => Record";
+                    break;
+                case Stop:
+                    std::cout << "Key => Stop";
+                    break;
+            
+                case Keypad1:
+                    std::cout << "Key => 1";
+                    break;
+                case Keypad2:
+                    std::cout << "Key => 2";
+                    break;
+                case Keypad3:
+                    std::cout << "Key => 3";
+                    break;
+                case Keypad4:
+                    std::cout << "Key => 4";
+                    break;
+                case Keypad5:
+                    std::cout << "Key => 5";
+                    break;
+                case Keypad6:
+                    std::cout << "Key => 6";
+                    break;
+                case Keypad7:
+                    std::cout << "Key => 7";
+                    break;
+                case Keypad8:
+                    std::cout << "Key => 8";
+                    break;
+                case Keypad9:
+                    std::cout << "Key => 9";
+                    break;
+                case Keypad0:
+                    std::cout << "Key => 0";
+                    break;
+            
+                case KeypadDash:
+                    std::cout << "Key => Keypad .-";
+                    break;
+                case KeypadE:
+                    std::cout << "Key => Keypad E";
+                    break;
+            
+                default:
+                    std::cout << std::hex;
+                    std::cout << "KEY => " << Key << std::endl;
+                    std::cout << std::dec;
+                    break;
+                }
+
+                std::cout << std::endl;
+        }
+
+};
 
 int main() {
     libusb_context *ctx;
@@ -315,8 +341,9 @@ int main() {
     char next = 'y';
  
     do {
-        if (next == 'y')
+        if (next == 'y') {
             std::cout << "Press a Key" << std::endl;
+        }
  
         libusb_interrupt_transfer(
             device_handle,
@@ -332,13 +359,15 @@ int main() {
             (data[HARMONY_KEY_POSITION] + data[HARMONY_KEY_POSITION + 1] != 0)) {
             std::cout << std::endl;
             std::cout << "Index:" << index++ << std::endl;
-            std::cout << "Length:" << actual_length << std::endl;
-            // Key Frame
-            outputFrame(data, actual_length);
-            // Button value
-            outputKey(data, actual_length);
-            // Output Map
-            outputDeviceSlot(data, actual_length);
+            
+
+            KeyPressFrame f(data, actual_length);
+
+            // Output the various info from the key press frame.
+            f.outputRawFrame();
+            f.outputKey();
+            f.outputDeviceSlot();
+
             std::cout << std::endl;
             // Continue?
             std::cout << "Next y or ~y?" << std::endl;
@@ -346,7 +375,9 @@ int main() {
         }
         // Not a Key Value Frame
         else
+        { 
             next = 'c'; // Continue
+        }
     } while ((next == 'y') || (next == 'c'));
  
     // Leave a clean environment
