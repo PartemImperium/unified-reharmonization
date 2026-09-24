@@ -10,6 +10,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBUSB REQUIRED IMPORTED_TARGET libusb-1.0)
 
 set(SOURCES
+    include/ButtonType.h
+    include/KeyPressFrame.h
+    include/libunifireharm.h
+    src/KeyPressFrame.cpp
     Sniffer.cpp
 )
 
