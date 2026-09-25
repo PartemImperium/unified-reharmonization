@@ -7,6 +7,10 @@
 
 #include "../include/libunifireharm.h"
 
+void KeyPressFrame::parseIsValidFrame() {
+    IsValidFrame = RawSize > 0;
+}
+
 void KeyPressFrame::parseKey() {
     Key = (ButtonType) ((unsigned short) (RawFrame[HARMONY_KEY_POSITION] << 8) + RawFrame[HARMONY_KEY_POSITION + 1]);
 }
