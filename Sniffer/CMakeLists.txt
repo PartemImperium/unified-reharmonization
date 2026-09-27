@@ -15,9 +15,11 @@ set(SOURCES
     include/KeyPress.h
     include/KeyPressFrame.h
     include/KeyPressType.h
+    include/UnifiedReharmonizer.h
     include/libunifireharm.h
     src/KeyPressFrame.cpp
     src/FrameHandler.cpp
+    src/UnifiedReharmonizer.cpp
     Sniffer.cpp
 )
 

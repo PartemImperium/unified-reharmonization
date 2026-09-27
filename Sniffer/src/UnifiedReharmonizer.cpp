@@ -7,22 +7,43 @@
 
 #include "../include/libunifireharm.h"
 
+bool UnifiedReharmonizer::hasPendingKeyPress() {
+    for (KeyPress key : ActiveFirstRegisterPresses) {
+        if (key.Type != 0
+         && key.Button != 0) {
+            return true;
+        }
+    }
+
+    for (KeyPress key : ActiveThirdRegisterPresses) {
+        if (key.Type != 0
+         && key.Button != 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 KeyPress UnifiedReharmonizer::listenForKey() {
     KeyPress output;
-    if (QueuedKeyPresses.empty()){
+    while (QueuedKeyPresses.empty()){
         // Listen for key
+        int sleepDuration = 10000;
+        if (hasPendingKeyPress()){
+
+        }
         KeyPressFrame workingFrame = Handler.listenForFrame(10000);
 
         if (workingFrame.IsValidFrame) {
 
         }
         
-        return output;
+       
     }
-    else {
-        output = QueuedKeyPresses.front();
-        QueuedKeyPresses.pop();
 
-        return output;
-    }
+    output = QueuedKeyPresses.front();
+    QueuedKeyPresses.pop();
+
+    return output;
 };

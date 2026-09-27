@@ -12,6 +12,7 @@ struct UnifiedReharmonizer {
         KeyPress ActiveFirstRegisterPresses[5];
         KeyPress ActiveThirdRegisterPresses[2];
 
+        bool hasPendingKeyPress();
     public:
         KeyPress listenForKey();
 };
