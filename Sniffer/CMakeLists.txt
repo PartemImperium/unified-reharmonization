@@ -12,11 +12,13 @@ pkg_check_modules(LIBUSB REQUIRED IMPORTED_TARGET libusb-1.0)
 set(SOURCES
     include/ButtonType.h
     include/Constants.h
+    include/FrameHandler.h
+    include/KeyPress.h
     include/KeyPressFrame.h
+    include/KeyPressType.h
     include/libunifireharm.h
-    include/UnifiedReharmonizer.h
     src/KeyPressFrame.cpp
-    src/UnifiedReharmonizer.cpp
+    src/FrameHandler.cpp
     Sniffer.cpp
 )
 
