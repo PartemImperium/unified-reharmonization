@@ -43,12 +43,16 @@ void KeyPressFrame::parseKeys() {
     
 }
 
+const int DEVICE_SLOT_POSITION = 1;
+
 void KeyPressFrame::parseDeviceSlot() {
-    DeviceSlot = (unsigned short) RawFrame[HARMONY_DEVICE_SLOT_POSITION];
+    DeviceSlot = (unsigned short) RawFrame[DEVICE_SLOT_POSITION];
 }
 
+const int DEVICE_BUTTON_REGISTER_POSITION = 2;
+
 void KeyPressFrame::parseButtonRegister() {
-    ButtonRegister = RawFrame[HARMONY_DEVICE_BUTTON_REGISTER_POSITION];
+    ButtonRegister = RawFrame[DEVICE_BUTTON_REGISTER_POSITION];
 }
 
 void KeyPressFrame::outputButtonRegister() {

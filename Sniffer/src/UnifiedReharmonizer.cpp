@@ -11,7 +11,7 @@ KeyPress UnifiedReharmonizer::listenForKey() {
     KeyPress output;
     if (QueuedKeyPresses.empty()){
         // Listen for key
-        KeyPressFrame workingFrame = Handler.listenForFrame(HARMONY_TIMEOUT);
+        KeyPressFrame workingFrame = Handler.listenForFrame(10000);
 
         if (workingFrame.IsValidFrame) {
 
