@@ -3,5 +3,6 @@
 #include "ButtonType.h"
 #include "Constants.h"
 #include "KeyPressFrame.h"
-#include "UnifiedReharmonizer.h"
-
+#include "KeyPressType.h"
+#include "KeyPress.h"
+#include "FrameHandler.h"

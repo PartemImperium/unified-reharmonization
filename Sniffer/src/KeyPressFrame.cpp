@@ -8,17 +8,52 @@
 #include "../include/libunifireharm.h"
 
 void KeyPressFrame::parseIsValidFrame() {
-    IsValidFrame = RawSize > 0;
+    IsValidFrame = RawSize > 0
+                && (ButtonRegister == 1 || ButtonRegister == 3);
 }
 
-void KeyPressFrame::parseKey() {
-    Key = (ButtonType) ((unsigned short) (RawFrame[HARMONY_KEY_POSITION] << 8) + RawFrame[HARMONY_KEY_POSITION + 1]);
+const int FIRST_REGISTER_KEY1_POSITION  = 4;
+const int FIRST_REGISTER_KEY2_POSITION = 5;
+const int FIRST_REGISTER_KEY3_POSITION = 6;
+const int FIRST_REGISTER_KEY4_POSITION = 7;
+const int FIRST_REGISTER_KEY5_POSITION = 8;
+
+// First Key Position
+const int THIRD_REGISTER_KEY_POSITION_A = 3;
+const int THIRD_REGISTER_KEY_POSITION_B = 4;
+
+// Second Key Position
+const int THIRD_REGISTER_KEY2_POSITION_A = 5;
+const int THIRD_REGISTER_KEY2_POSITION_B = 6;
+
+void KeyPressFrame::parseKeys() {
+    switch(ButtonRegister) {
+        case 1:
+            Keys[0] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY1_POSITION];
+            Keys[1] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY2_POSITION];
+            Keys[2] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY3_POSITION];
+            Keys[3] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY4_POSITION];
+            Keys[4] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY5_POSITION];
+            break;
+        case 3:
+            Keys[0] = (ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY_POSITION_B]);
+            Keys[1] = (ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY2_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY2_POSITION_B]);
+            break;
+    }
+    
 }
 
 void KeyPressFrame::parseDeviceSlot() {
     DeviceSlot = (unsigned short) RawFrame[HARMONY_DEVICE_SLOT_POSITION];
 }
 
+void KeyPressFrame::parseButtonRegister() {
+    ButtonRegister = RawFrame[HARMONY_DEVICE_BUTTON_REGISTER_POSITION];
+}
+
+void KeyPressFrame::outputButtonRegister() {
+    std::cout << "Button Register => " << ButtonRegister << std::endl;
+}
 
 void KeyPressFrame::outputDeviceSlot() {
     std::cout << "Device ID => " << DeviceSlot << std::endl;
@@ -38,8 +73,8 @@ void KeyPressFrame::outputRawFrame() {
     std::cout << std::dec;
 }
 
-void KeyPressFrame::outputKey() {
-    switch (Key) {
+void outputKeyPress(ButtonType key) {
+    switch (key) {
         case Off:
             std::cout << "Key => Off Button";
             break;
@@ -199,13 +234,22 @@ void KeyPressFrame::outputKey() {
         case KeypadE:
             std::cout << "Key => Keypad E";
             break;
-    
+
+
         default:
             std::cout << std::hex;
-            std::cout << "KEY => " << Key << std::endl;
+            std::cout << "KEY => " << key << std::endl;
             std::cout << std::dec;
             break;
         }
 
         std::cout << std::endl;
+}
+
+void KeyPressFrame::outputKey() {
+    for (ButtonType key : Keys) {
+        if (key != 0) {
+            outputKeyPress(key);
+        }
+    }
 }

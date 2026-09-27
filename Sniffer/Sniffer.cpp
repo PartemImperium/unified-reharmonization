@@ -17,7 +17,7 @@ int main() {
     char next = 'y';
     int index = 0;
 
-    UnifiedReharmonizer reharm;
+    FrameHandler handler;
     KeyPressFrame keyFrame;
 
     do {
@@ -25,7 +25,7 @@ int main() {
             std::cout << "Press a Key" << std::endl;
         }
  
-        keyFrame = reharm.listenForFrame();
+        keyFrame = handler.listenForFrame(10000);
         // Key Value received (Key Release ignored here)
         // Note: HARMONY REMOTE seems to send over data; some false positive happen, to ignore in this bench
         if (keyFrame.IsValidFrame) {
@@ -38,7 +38,8 @@ int main() {
             keyFrame.outputRawFrame();
             keyFrame.outputKey();
             keyFrame.outputDeviceSlot();
-
+            keyFrame.outputButtonRegister();
+            
             std::cout << std::endl;
             // Continue?
             std::cout << "Next y or ~y?" << std::endl;

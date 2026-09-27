@@ -1,13 +1,28 @@
+#include <linux/hid.h>
+#include <libusb-1.0/libusb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <iostream>
+
 #include "../include/libunifireharm.h"
 
-KeyPressFrame UnifiedReharmonizer::listenForFrame() {
-    libusb_interrupt_transfer(
-        device_handle,
-        iface_desc->endpoint[HARMONY_ENDPOINT_INDEX].bEndpointAddress,
-        data,
-        sizeof(data),
-        &actual_length,
-        HARMONY_TIMEOUT);
+KeyPress UnifiedReharmonizer::listenForKey() {
+    KeyPress output;
+    if (QueuedKeyPresses.empty()){
+        // Listen for key
+        KeyPressFrame workingFrame = Handler.listenForFrame(HARMONY_TIMEOUT);
 
-    return KeyPressFrame(data, actual_length);
-}
+        if (workingFrame.IsValidFrame) {
+
+        }
+        
+        return output;
+    }
+    else {
+        output = QueuedKeyPresses.front();
+        QueuedKeyPresses.pop();
+
+        return output;
+    }
+};
