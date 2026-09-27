@@ -25,15 +25,15 @@ const int THIRD_REGISTER_KEY2_POSITION_B = 6;
 void KeyPressFrame::parseKeys() {
     switch(ButtonRegister) {
         case 1:
-            Keys[0] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY1_POSITION];
-            Keys[1] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY2_POSITION];
-            Keys[2] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY3_POSITION];
-            Keys[3] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY4_POSITION];
-            Keys[4] = (ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY5_POSITION];
+            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY1_POSITION]);
+            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY2_POSITION]);
+            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY3_POSITION]);
+            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY4_POSITION]);
+            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY5_POSITION]);
             break;
         case 3:
-            Keys[0] = (ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY_POSITION_B]);
-            Keys[1] = (ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY2_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY2_POSITION_B]);
+            Keys.push_back((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY_POSITION_B]));
+            Keys.push_back((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY2_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY2_POSITION_B]));
             break;
     }
     

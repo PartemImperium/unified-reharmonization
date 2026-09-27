@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <libusb-1.0/libusb.h>
 
 struct KeyPressFrame {
@@ -18,7 +20,7 @@ struct KeyPressFrame {
 
     public:
         bool IsValidFrame;
-        ButtonType Keys[5];
+        std::vector<ButtonType> Keys;
         unsigned short DeviceSlot;
         int ButtonRegister;
 
