@@ -4,11 +4,7 @@
 // Version     :
 //============================================================================
  
-#include <linux/hid.h>
 #include <libusb-1.0/libusb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <iostream>
 
 #include "include/libunifireharm.h"
