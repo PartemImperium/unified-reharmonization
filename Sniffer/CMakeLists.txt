@@ -16,6 +16,7 @@ set(SOURCES
     include/KeyPressFrame.h
     include/KeyPressType.h
     include/UnifiedReharmonizer.h
+    include/PendingKeyPress.h
     include/libunifireharm.h
     src/KeyPressFrame.cpp
     src/FrameHandler.cpp

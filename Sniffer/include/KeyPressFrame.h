@@ -12,7 +12,12 @@ struct KeyPressFrame {
 
         void parseIsValidFrame();
 
+        void parseIsTimeoutFrame();
+
+        void parseIsResetFrame();
+
         void parseKeys();
+        void parseKey(ButtonType key);
 
         void parseDeviceSlot();
 
@@ -20,9 +25,12 @@ struct KeyPressFrame {
 
     public:
         bool IsValidFrame;
+        bool IsTimeoutFrame;
+        bool IsResetFrame;
         std::vector<ButtonType> Keys;
         unsigned short DeviceSlot;
         int ButtonRegister;
+
 
         KeyPressFrame() {
             IsValidFrame = false;
@@ -33,9 +41,11 @@ struct KeyPressFrame {
             RawSize = _size;
             ReturnCode = _returnCode;
 
-            parseIsValidFrame();
-            parseDeviceSlot();
             parseButtonRegister();
+            parseIsValidFrame();
+            parseIsTimeoutFrame();
+            parseDeviceSlot();
+            parseIsResetFrame();
 
             // IMPORTANT: Keep the parse keys at the end. It uses info from the other data in the frame to correctly parse the keys.
             parseKeys();

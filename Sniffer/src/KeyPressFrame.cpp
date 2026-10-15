@@ -8,7 +8,11 @@ void KeyPressFrame::parseIsValidFrame() {
                 && (ButtonRegister == 1 || ButtonRegister == 3);
 }
 
-const int FIRST_REGISTER_KEY1_POSITION  = 4;
+void KeyPressFrame::parseIsTimeoutFrame() {
+    IsTimeoutFrame = ReturnCode == LIBUSB_ERROR_TIMEOUT;
+}
+
+const int FIRST_REGISTER_KEY1_POSITION = 4;
 const int FIRST_REGISTER_KEY2_POSITION = 5;
 const int FIRST_REGISTER_KEY3_POSITION = 6;
 const int FIRST_REGISTER_KEY4_POSITION = 7;
@@ -25,18 +29,23 @@ const int THIRD_REGISTER_KEY2_POSITION_B = 6;
 void KeyPressFrame::parseKeys() {
     switch(ButtonRegister) {
         case 1:
-            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY1_POSITION]);
-            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY2_POSITION]);
-            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY3_POSITION]);
-            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY4_POSITION]);
-            Keys.push_back((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY5_POSITION]);
+            parseKey((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY1_POSITION]);
+            parseKey((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY2_POSITION]);
+            parseKey((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY3_POSITION]);
+            parseKey((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY4_POSITION]);
+            parseKey((ButtonType) (unsigned short) RawFrame[FIRST_REGISTER_KEY5_POSITION]);
             break;
         case 3:
-            Keys.push_back((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY_POSITION_B]));
-            Keys.push_back((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY2_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY2_POSITION_B]));
+            parseKey((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY_POSITION_B]));
+            parseKey((ButtonType) ((unsigned short) (RawFrame[THIRD_REGISTER_KEY2_POSITION_A] << 8) + RawFrame[THIRD_REGISTER_KEY2_POSITION_B]));
             break;
     }
-    
+}
+
+void KeyPressFrame::parseKey(ButtonType key) {
+    if (key != 0) {
+        Keys.push_back(key);
+    }
 }
 
 const int DEVICE_SLOT_POSITION = 1;
@@ -251,5 +260,27 @@ void KeyPressFrame::outputKey() {
         if (key != 0) {
             outputKeyPress(key);
         }
+    }
+}
+
+void KeyPressFrame::parseIsResetFrame() {
+    if (IsValidFrame) {
+
+        if (ButtonRegister == 1) {
+            IsResetFrame = RawFrame[FIRST_REGISTER_KEY1_POSITION] == 0
+                        && RawFrame[FIRST_REGISTER_KEY2_POSITION] == 0
+                        && RawFrame[FIRST_REGISTER_KEY3_POSITION] == 0
+                        && RawFrame[FIRST_REGISTER_KEY4_POSITION] == 0
+                        && RawFrame[FIRST_REGISTER_KEY5_POSITION] == 0;
+        }
+        else if (ButtonRegister == 3) {
+            IsResetFrame = RawFrame[THIRD_REGISTER_KEY_POSITION_A] == 0
+                        && RawFrame[THIRD_REGISTER_KEY_POSITION_B] == 0
+                        && RawFrame[THIRD_REGISTER_KEY2_POSITION_A] == 0
+                        && RawFrame[THIRD_REGISTER_KEY2_POSITION_B] == 0;
+        }
+    } 
+    else {
+        IsResetFrame = false;
     }
 }
