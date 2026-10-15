@@ -1,7 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include <queue>
+#include <vector>
+#include <map>
 
 #include "libunifireharm.h"
 
@@ -9,8 +10,9 @@ struct UnifiedReharmonizer {
     private:
         FrameHandler Handler;
         std::queue<KeyPress> QueuedKeyPresses;
-        KeyPress ActiveFirstRegisterPresses[5];
-        KeyPress ActiveThirdRegisterPresses[2];
+        std::map<int,std::map<int,std::vector<PendingKeyPress>>> PendingKeys;
+
+        bool hasPendingKeyPress();
 
     public:
         KeyPress listenForKey();
