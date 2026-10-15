@@ -7,7 +7,8 @@
 #include <libusb-1.0/libusb.h>
 #include <iostream>
 
-#include "include/libunifireharm.h"
+//TODO: I should be able to include this as <libunifireharm.h> not the relitive path... But it is working now... I can figure this out later.
+#include "../lib/include/libunifireharm.h"
 
 void outputKeyPresss(ButtonType key) {
     switch (key) {

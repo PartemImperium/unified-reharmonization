@@ -23,7 +23,7 @@
           pname = "unified-reharmonization";
           version = self.shortRev or self.dirtyShortRev or "unknown";
 
-          src = ./Sniffer;
+          src = ./.;
 
           nativeBuildInputs = [
             cmake
